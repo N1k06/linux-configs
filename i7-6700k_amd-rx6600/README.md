@@ -83,10 +83,10 @@ yay -S grub-customizer
 
 ## Remove Screen/App Association from i3
 
-Open the i3blocks config and comment out the Firefox/terminal/Thunar mappings to virtual desktops:
+Open the i3blocks config and comment out the Firefox/Terminal/Thunar mappings to virtual desktops:
 
 ```bash
-nano ~/.config/i3/i3blocks.conf
+nano ~/.config/i3/config
 ```
 
 ---
