@@ -14,6 +14,8 @@ Install and customize Endeavour OS on Desktop PC (i7-6700K, AMD RX 6600, 16GB RA
 - [Remove Screen/App Association from i3](#remove-screenapp-association-from-i3)
 - [Install Sensors](#install-sensors)
 - [Install Text Editors](#install-text-editors)
+- [Setup Alacritty with Iosevka Fonts](#setup-alacritty-with-iosevka-fonts)
+- [Set background](#set-the-double-monitor-background)
 
 ---
 
@@ -153,4 +155,17 @@ style = "Italic"
 [font.bold_italic]
 family = "Iosevka Nerd Font"
 style = "Bold Italic"
+```
+
+---
+
+## Set the double monitor background
+
+Open the i3 config file:
+```bash
+nano ~/.config/i3/config
+```
+Tell i3 to load the picture on both screens at startup with feh by adding this line at the end:
+```bash
+exec_always --no-startup-id feh --bg-scale --no-xinerama /path/to/picture.jpg
 ```
