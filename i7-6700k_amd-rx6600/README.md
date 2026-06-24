@@ -106,3 +106,51 @@ yay -S neovim
 yay -S vscodium-bin
 yay -S lite-xl
 ```
+
+---
+
+## Setup Alacritty with Iosevka Fonts
+
+Install packages:
+```bash
+yay -S ttf-iosevka-nerd
+yay -S alacritty
+```
+
+Edit the default Terminal Emulator in the i3 configuration file (search for terminal and replace xfce4-terminal)
+
+```bash
+nano ~/.config/i3/config
+```
+
+Create che configuration directory for alacritty:
+
+```bash
+mkdir -p ~/.config/alacritty
+```
+
+Edit the default font:
+```bash
+nano ~/.config/alacritty/alacritty.toml
+```
+Paste font setup inside:
+```toml
+[font]
+size = 12.0
+
+[font.normal]
+family = "Iosevka Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "Iosevka Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "Iosevka Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "Iosevka Nerd Font"
+style = "Bold Italic"
+```
