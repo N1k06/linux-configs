@@ -16,6 +16,7 @@ Install and customize Endeavour OS on Desktop PC (i7-6700K, AMD RX 6600, 16GB RA
 - [Install Text Editors](#install-text-editors)
 - [Setup Alacritty with Iosevka Fonts](#setup-alacritty-with-iosevka-fonts)
 - [Set background](#set-the-double-monitor-background)
+- [Screen Composition](#activate-screen-composition)
 
 ---
 
@@ -168,4 +169,40 @@ nano ~/.config/i3/config
 Tell i3 to load the picture on both screens at startup with feh by adding this line at the end:
 ```bash
 exec_always --no-startup-id feh --bg-scale --no-xinerama /path/to/picture.jpg
+```
+
+---
+
+## Activate Screen Composition
+
+Install picom to use fade-in and fade-out animations as well as transparency for terminal windows.
+```bash
+yay -S picom
+```
+Open the alacritty configuratio file:
+```bash
+nano ~/.config/alacritty/alacritty.toml
+```
+And add the following line;
+```toml
+[window]
+opacity = 0.85
+```
+Then open i3 config file
+```bash
+nano ~/.config/i3/config
+```
+And add the following line to start picom at startup
+```text
+exec_always --no-startup-id picom -b
+```
+Then customize picom parameters for the desired appearance. 
+Create the default folder for picom config and copy the default config file inside it.
+```bash
+mkdir -p ~/.config/picom
+cp /etc/xdg/picom.conf ~/.config/picom/picom.conf
+```
+Edit the config file to match the desired appearance (i.e. set delta for different fade speed).
+```bash
+nano ~/.config/picom/picom.conf
 ```
