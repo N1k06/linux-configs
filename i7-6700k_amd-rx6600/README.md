@@ -112,6 +112,70 @@ yay -S lite-xl
 
 ---
 
+## Set screen order
+
+Open arandr and see exact ports' names (i.e. HDMI-1 and DP-2).
+Then create the Xserver configuration file:
+
+sudo nano /etc/X11/xorg.conf.d/10-monitor.conf
+
+And write this inside
+
+Section "Monitor"
+    Identifier  "HDMI-1"
+    Option      "Primary" "true"
+EndSection
+
+Section "Monitor"
+    Identifier  "DP-2"
+    Option      "RightOf" "HDMI-1"
+EndSection
+
+
+## Set custom dual wallpaper
+
+Disable EndeavorOS default wallpaper: run 
+
+nano i3 ~/.config/i3/config
+
+Replace this line (or a similar one)
+
+exec --no-startup-id sleep 1 && feh --bg-fill /usr/share/endeavouros/backgrounds/endeavouros-wallpaper.png
+
+With this line
+exec_always --no-startup-id feh --bg-scale --no-xinerama <path/to/image.jpg>
+
+## Install and configure Flameshot
+
+Edit the i3 config file:
+
+```bash
+nano ~/.config/i3/config
+```
+
+And replace the bindings associated with print key with this:
+
+bindsym Print exec --no-startup-id flameshot gui
+
+If the screenshot fails due to Xserver, and to avoid the screen selection window, create the config file and its relative directory.
+mkdir ~/.config/flameshot
+
+Then create the config file:
+nano ~/.config/flameshot/flameshot.ini
+
+And write this inside
+
+[General]
+useX11LegacyScreenshot=true
+captureActiveMonitor=true
+
+Or use the flameshot config utility selecting the same options.
+```bash
+flameshot config
+```
+
+---
+
 ## Setup Alacritty with Iosevka Fonts
 
 Install packages:
