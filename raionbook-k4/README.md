@@ -18,6 +18,7 @@ Install and customize Linux on Raionbook K4 (barebone AIstone X4KKNAL), with AMD
   - [Change background](#change-background)
   - [Enable keyboard shortcuts (volume and screen brightness)](#enable-keyboard-shortcuts-volume-and-screen-brightness)
   - [Add indicators/buttons to bar](#add-indicatorsbuttons-to-bar)
+  - [Wifi management](#wifi)
 - [EndeavorOS (i3)](#endeavoros-i3)
   - [Set screen DPI](#set-screen-dpi)
 
@@ -159,10 +160,10 @@ Add the following to your sway config file:
 
 ```conf
 default_border pixel 2
-gaps inner 10
-gaps outer 5
+gaps inner 2
+gaps outer 1
 ```
-
+Customize the values until the desired look is reached.
 ⚠️ **Watch out for upscaling!** Pixels specified here are upscaled 2x.
 
 ### Terminal transparency
@@ -212,6 +213,29 @@ Audio already works from the sway config default file. For brightness control, i
 
 ```bash
 yay -S brightnessctl
+```
+
+### Wifi
+
+Since `nm-connection-editor` forces the user to configure and edit the wifi connections blindly, install some useful networking tools (impala for tui or iwgtk for gui).
+
+First install and configure `iwd` as the default backend for `NetworkManager`
+```bash
+yay -S iwd
+sudo nano /etc/NetworkManager/conf.d/wifi_backend.conf
+```
+
+Paste in the `wifi-backend.conf` configuration file the following:
+```text
+[device]
+wifi.backend=iwd
+```
+
+Then restart `NetworkManager` and install the tools:
+```bash
+sudo systemctl restart NetworkManager
+yay -S impala
+yay -S iwgtk
 ```
 
 ### Add indicators/buttons to bar
