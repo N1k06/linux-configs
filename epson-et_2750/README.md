@@ -95,9 +95,13 @@ python3 epson_print_conf.py -m ET-2750 -a 192.168.1.110 --temp_reset_waste_ink
 
 Aggiungere `--dry-run` a qualsiasi comando di scrittura per simulare l'operazione senza eseguirla davvero.
 
-## 6. Power Cleaning (via GUI)
+## 6. Power Cleaning
 
-Il power cleaning non è disponibile da riga di comando, solo dalla GUI del tool.
+Il progetto `epson_print_conf` non espone il power cleaning come flag dedicato nella CLI principale (`epson_print_conf.py -h` non lo elenca) — è disponibile "di fabbrica" solo tramite la GUI Tkinter (`ui.py`). Il comando effettivo verso la stampante è lo stesso in entrambi i casi (stessa funzione `clean_nozzles(group, power_clean=True/False)` del modulo `epson_escp2`), cambia solo l'interfaccia usata per richiamarla.
+
+Due opzioni equivalenti:
+
+### 6a. Via GUI (soluzione "di fabbrica" del progetto)
 
 ```bash
 python3 ui.py -m ET-2750 -a 192.168.1.110
@@ -105,7 +109,42 @@ python3 ui.py -m ET-2750 -a 192.168.1.110
 
 Nella finestra: cercare il pulsante **"Power Clean"** (distinto da "Clean Nozzles", che è la pulizia standard).
 
-**Prima di lanciarlo:**
+### 6b. Via script CLI standalone (`power_clean.py`, aggiunto a questo repo)
+
+Per evitare la GUI, `power_clean.py` importa direttamente la classe `Printer` di `epson_print_conf.py` e chiama `clean_nozzles()` da riga di comando.
+
+**Installazione (una tantum):** copiare `power_clean.py` nella cartella del repo, accanto a `epson_print_conf.py` (necessario per l'import):
+```bash
+cp power_clean.py ~/epson_print_conf/
+```
+
+**Utilizzo:**
+```bash
+cd ~/epson_print_conf
+source ~/.venv-epson/bin/activate
+
+# Power cleaning (default), con richiesta di conferma prima dell'invio
+python3 power_clean.py -a 192.168.1.110 -m ET-2750
+
+# Solo simulazione, nessun comando inviato alla stampante
+python3 power_clean.py -a 192.168.1.110 -m ET-2750 --dry-run
+
+# Pulizia standard invece di power clean
+python3 power_clean.py -a 192.168.1.110 -m ET-2750 --standard
+
+# Selezione gruppo ugelli (0 = default/tutti, 1 = solo colore su alcuni modelli)
+python3 power_clean.py -a 192.168.1.110 -m ET-2750 --group 1
+```
+
+Lo script chiede conferma esplicita (`s`/`N`) prima di inviare davvero il comando, per evitare cicli accidentali.
+
+> **Nota**: lo script è stato scritto basandosi sull'esempio ufficiale nel README di `epson_print_conf` (`self.printer.clean_nozzles(0)`) e sulla firma della funzione nel modulo `epson_escp2`, ma non è stato verificato end-to-end su hardware reale al momento della stesura. Se al primo lancio compare un `ImportError` o `TypeError` sui parametri di `Printer(...)` o `clean_nozzles(...)`, verificare i nomi esatti con:
+> ```bash
+> grep -n "class Printer\|def clean_nozzles\|def __init__" epson_print_conf.py
+> ```
+> e correggere lo script di conseguenza.
+
+**Prima di lanciare il power cleaning (con qualsiasi metodo):**
 - Verificare che tutti i serbatoi d'inchiostro siano almeno a un terzo pieni.
 - Il power cleaning consuma molto più inchiostro della pulizia standard e riempie più rapidamente il contatore waste ink.
 
@@ -143,6 +182,9 @@ python3 epson_print_conf.py -m ET-2750 -a 192.168.1.110 -i
 # Reset permanente contatore
 python3 epson_print_conf.py -m ET-2750 -a 192.168.1.110 --reset_waste_ink
 
-# GUI per power cleaning
+# Power cleaning via GUI
 python3 ui.py -m ET-2750 -a 192.168.1.110
+
+# Power cleaning via script CLI standalone (alternativa alla GUI)
+python3 power_clean.py -a 192.168.1.110 -m ET-2750
 ```
